@@ -61,7 +61,7 @@ export const googleResolver = ({
             if (!res.ok)
               req.payload.logger.info({
                 googleResponse: data,
-                message: `An error occurred when trying to translate the data using Google API`,
+                message: 'An error occurred when trying to translate the data using Google API',
               });
 
             return {
