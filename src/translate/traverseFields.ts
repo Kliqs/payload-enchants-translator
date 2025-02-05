@@ -63,14 +63,18 @@ export const traverseFields = ({
 
         if (!groupDataFrom) break;
 
-        const groupDataTranslated =
+        let groupDataTranslated =
           (siblingDataTranslated[field.name] as Record<string, unknown>) ?? {};
 
+        if (!groupDataTranslated) {
+            groupDataTranslated = {id: ObjectID().toHexString()};
+            siblingDataTranslated[field.name] = groupDataTranslated;
+        }
         traverseFields({
           dataFrom,
           emptyOnly,
           fields: field.fields,
-          localizedParent: field.localized,
+          localizedParent: localizedParent ?? field.localized,
           siblingDataFrom: groupDataFrom,
           siblingDataTranslated: groupDataTranslated,
           translatedData,
@@ -138,7 +142,7 @@ export const traverseFields = ({
         }
 
         blocksDataTranslated.forEach((item, index) => {
-          const block = field.blocks.find((each) => each.slug === item.blockType);
+          const block = field.blocks.find((each: Record<string, unknown>) => each.slug === item.blockType);
 
           if (!block) return;
 
@@ -229,18 +233,58 @@ export const traverseFields = ({
           const root = (siblingDataTranslated[field.name] as Record<string, unknown>)
             ?.root as Record<string, unknown>;
 
-          if (root)
+          if (root) {
             traverseRichText({
-              onText: (siblingData) => {
-                valuesToTranslate.push({
-                  onTranslate: (translated: string) => {
-                    siblingData.text = translated;
-                  },
-                  value: siblingData.text,
-                });
-              },
-              root,
+                onText: (siblingData)=>{
+                    valuesToTranslate.push({
+                        onTranslate: (translated: string)=>{
+                            siblingData.text = translated;
+                        },
+                        value: siblingData.text
+                    });
+                },
+                root
             });
+
+            const richTextBlocksGetSubFields = field.editor?.editorConfig?.features?.getSubFields?.get('block');
+            if (typeof richTextBlocksGetSubFields !== 'function') break;
+            const richTextBlocks = richTextBlocksGetSubFields('block');
+            const richTextBlockDataFrom = (richTextDataFrom.root as Record<string, unknown>)?.children;
+            if (isEmpty(richTextBlockDataFrom) || !Array.isArray(richTextBlockDataFrom) || isEmpty(richTextBlocks)) break;
+            let richTextBlocksDataTranslated = ((siblingDataTranslated[field.name] as Record<string, unknown>)?.root as Record<string, unknown>)?.children as Record<string, unknown>[] ?? [];
+
+            if (field.localized || localizedParent) {
+                if (richTextBlocksDataTranslated.length > 0 && emptyOnly) break;
+                richTextBlocksDataTranslated = richTextBlockDataFrom.map((blockData)=>{
+                    if (blockData?.fields?.blockType) {
+                        return {
+                            ...blockData,
+                            fields: {
+                                blockType: blockData?.fields?.blockType,
+                                id: ObjectID().toHexString()
+                            }
+                        }
+                    }
+                    return blockData;
+                });
+            }
+
+            richTextBlocksDataTranslated.forEach((item, index)=>{
+                const block = richTextBlocks[0].blocks.find((each: Record<string, unknown>)=>each.slug && each.slug === (item.fields as Record<string, unknown>).blockType);
+                if (!block) return;
+                traverseFields({
+                    dataFrom,
+                    emptyOnly,
+                    fields: block.fields,
+                    localizedParent: localizedParent ?? field.localized,
+                    siblingDataFrom: richTextBlockDataFrom[index].fields,
+                    siblingDataTranslated: item.fields as Record<string, unknown>,
+                    translatedData,
+                    valuesToTranslate
+                });
+            });
+            ((siblingDataTranslated[field.name] as Record<string, unknown>).root as Record<string, unknown>).children = richTextBlocksDataTranslated;
+          }
         } else {
           for (const root of siblingDataTranslated[field.name] as unknown[]) {
             traverseRichText({

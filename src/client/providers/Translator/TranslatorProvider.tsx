@@ -80,14 +80,20 @@ export const TranslatorProvider = ({ children }: { children: ReactNode }) => {
 
   const [localeToTranslateFrom, setLocaleToTranslateFrom] = useState<string>('');
 
-  useEffect(() => {
-    const defaultFromOptions = localesOptions.find(
-      (each) => localization.defaultLocale === each.code,
-    );
-
-    if (defaultFromOptions) setLocaleToTranslateFrom(defaultFromOptions.code);
+  useEffect(()=>{
+    const localeToTranslateFromExists = localesOptions.find((each)=>localeToTranslateFrom === each.code);
+    if (localeToTranslateFrom && localeToTranslateFromExists) return;
+    const defaultFromOptions = localesOptions.find((each)=>localization.defaultLocale === each.code);
+    if (defaultFromOptions) {
+        setLocaleToTranslateFrom(defaultFromOptions.code);
+        return;
+    }
     setLocaleToTranslateFrom(localesOptions[0].code);
-  }, [locale, localesOptions, localization.defaultLocale]);
+}, [
+    locale,
+    localesOptions,
+    localization.defaultLocale
+]);
 
   const closeTranslator = () => modal.closeModal(modalSlug);
 

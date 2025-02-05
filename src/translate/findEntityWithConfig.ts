@@ -63,6 +63,7 @@ export const findEntityWithConfig = async (
         locale: locale as any,
         overrideAccess,
         req,
+        draft: true,
       });
 
   return {
