@@ -5,6 +5,6 @@ export const CustomButton = (type: 'publish' | 'save'): CustomPublishButton | Cu
     clientProps: {
       type,
     },
-    path: '@payload-enchants/translator/client#CustomButtonWithTranslator',
+    path: '@extravirgin/payload-enchants-translator/client#CustomButtonWithTranslator',
   };
 };

@@ -64,7 +64,7 @@ export const traverseFields = ({
         if (!groupDataFrom) break;
 
         let groupDataTranslated =
-          (siblingDataTranslated[field.name] as Record<string, unknown>) ?? {};
+          (siblingDataTranslated[field.name] as Record<string, unknown>);
 
         if (!groupDataTranslated) {
             groupDataTranslated = {id: ObjectID().toHexString()};
@@ -102,6 +102,9 @@ export const traverseFields = ({
           }));
         }
 
+        if (!Array.isArray(arrayDataTranslated)) {
+          break;
+        }
         arrayDataTranslated.forEach((item, index) => {
           traverseFields({
             dataFrom,
@@ -201,7 +204,7 @@ export const traverseFields = ({
         if (emptyOnly && siblingDataTranslated[field.name]) break;
 
         // do not translate the block ID or admin-facing label
-        if (field.name === 'blockName' || field.name === 'id') {
+        if (field.name === 'id') {
           break;
         }
 
@@ -246,7 +249,7 @@ export const traverseFields = ({
                 root
             });
 
-            const richTextBlocksGetSubFields = field.editor?.editorConfig?.features?.getSubFields?.get('block');
+            const richTextBlocksGetSubFields = (field.editor as any)?.editorConfig?.features?.getSubFields?.get('block');
             if (typeof richTextBlocksGetSubFields !== 'function') break;
             const richTextBlocks = richTextBlocksGetSubFields('block');
             const richTextBlockDataFrom = (richTextDataFrom.root as Record<string, unknown>)?.children;
@@ -270,7 +273,7 @@ export const traverseFields = ({
             }
 
             richTextBlocksDataTranslated.forEach((item, index)=>{
-                const block = richTextBlocks[0].blocks.find((each: Record<string, unknown>)=>each.slug && each.slug === (item.fields as Record<string, unknown>).blockType);
+                const block = richTextBlocks[0].blocks.find((each: Record<string, unknown>)=>each.slug && each.slug === (item.fields as Record<string, unknown>)?.blockType);
                 if (!block) return;
                 traverseFields({
                     dataFrom,

@@ -22,6 +22,6 @@
     "isolatedModules": true,
     "target": "ESNext"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts", "src/**/*.json"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts", "src/**/*.json", "src/**/*.js", "src/**/*.d.js"],
   "exclude": ["dist", "build", "node_modules"]
 }
