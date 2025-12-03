@@ -2,15 +2,16 @@
 
 import './styles.scss';
 
-import { PublishButton, SaveButton, useConfig, useDocumentInfo } from '@payloadcms/ui';
+import { PublishButton, SaveButton, useConfig, useDocumentInfo, useLocale } from '@payloadcms/ui';
 
 import type { TranslateResolver } from '../../../resolvers/types';
 import { TranslatorProvider } from '../../providers/Translator/TranslatorProvider';
 import { ResolverButton } from '../ResolverButton';
 import { TranslatorModal } from '../TranslatorModal';
 
-export const CustomButtonWithTranslator = ({ type }: { type: 'publish' | 'save' }) => {
+export const CustomButtonWithTranslator = ({ type, disabledLocales }: { type: 'publish' | 'save', disabledLocales: string[] }) => {
   const { config } = useConfig();
+  const locale = useLocale();
 
   const DefaultButton = type === 'publish' ? PublishButton : SaveButton;
 
@@ -20,10 +21,12 @@ export const CustomButtonWithTranslator = ({ type }: { type: 'publish' | 'save' 
 
   if (!id && !globalSlug) return <DefaultButton />;
 
+  if(disabledLocales.includes(locale.code)) return <DefaultButton />;
+
   return (
     <TranslatorProvider>
       <div className={'translator__custom-save-button'}>
-        <TranslatorModal />
+        <TranslatorModal disabledLocales={disabledLocales} />
         {resolvers.map((resolver) => (
           <ResolverButton key={resolver.key} resolver={resolver} />
         ))}

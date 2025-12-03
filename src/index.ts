@@ -47,8 +47,8 @@ export const translator: (pluginConfig: TranslatorConfig) => Plugin = (pluginCon
                 ...(collection.admin?.components ?? {}),
                 edit: {
                   ...(collection.admin?.components?.edit ?? {}),
-                  PublishButton: CustomButton('publish'),
-                  SaveButton: CustomButton('save'),
+                  PublishButton: CustomButton('publish', pluginConfig.disabledLocales ?? []),
+                  SaveButton: CustomButton('save', pluginConfig.disabledLocales ?? []),
                 },
               },
             },
@@ -80,8 +80,8 @@ export const translator: (pluginConfig: TranslatorConfig) => Plugin = (pluginCon
                 ...(global.admin?.components ?? {}),
                 elements: {
                   ...(global.admin?.components?.elements ?? {}),
-                  PublishButton: CustomButton('publish'),
-                  SaveButton: CustomButton('save'),
+                  PublishButton: CustomButton('publish', pluginConfig.disabledLocales ?? []),
+                  SaveButton: CustomButton('save', pluginConfig.disabledLocales ?? []),
                 },
               },
             },

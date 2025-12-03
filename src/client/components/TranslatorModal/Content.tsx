@@ -4,7 +4,7 @@ import { Button, Popup, PopupList, useTranslation } from '@payloadcms/ui';
 import { useTranslator } from '../../providers/Translator/context';
 import { LocaleLabel } from '../LocaleLabel';
 
-export const Content = () => {
+export const Content = ({disabledLocales}:{disabledLocales: string[]}) => {
   const {
     localeToTranslateFrom: localeCodeToTranslateFrom,
     localesOptions,
@@ -28,7 +28,7 @@ export const Content = () => {
           horizontalAlign='center'
           render={({ close }) => (
             <PopupList.ButtonGroup>
-              {localesOptions.map((option) => {
+              {localesOptions.filter((option) => !disabledLocales.includes(option.code)).map((option) => {
                 const label = getTranslation(option.label, i18n);
 
                 return (

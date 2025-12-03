@@ -19,4 +19,8 @@ export type TranslatorConfig = {
    * Add resolvers that you want to include, examples on how to write your own in ./plugin/src/resolvers
    */
   resolvers: TranslateResolver[];
+  /**
+   * Locales that should be excluded from translation (source and target)
+   */
+  disabledLocales?: string[];
 };
