@@ -57,6 +57,7 @@ export const translator: (pluginConfig: TranslatorConfig) => Plugin = (pluginCon
       custom: {
         ...(config.custom ?? {}),
         translator: {
+          basePath: pluginConfig.basePath ?? '',
           resolvers: pluginConfig.resolvers,
         },
       },

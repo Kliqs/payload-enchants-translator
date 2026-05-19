@@ -23,4 +23,8 @@ export type TranslatorConfig = {
    * Locales that should be excluded from translation (source and target)
    */
   disabledLocales?: string[];
+  /**
+   * Optional base path for the translator API endpoint
+   */
+  basePath?: string;
 };

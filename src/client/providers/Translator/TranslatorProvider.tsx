@@ -59,7 +59,8 @@ export const TranslatorProvider = ({ children }: { children: ReactNode }) => {
     },
   } = useConfig();
 
-  const apiClient = createClient({ api, serverURL });
+  const basePath = (custom?.translator?.basePath as string | undefined) ?? '';
+  const apiClient = createClient({ api, basePath, serverURL });
 
   const resolverConfig = useMemo(() => {
     if (!resolver) return null;
