@@ -30,6 +30,7 @@ export const translator: (pluginConfig: TranslatorConfig) => Plugin = (pluginCon
         custom: {
           ...(config.admin?.custom ?? {}),
           translator: {
+            basePath: pluginConfig.basePath ?? '',
             resolvers: pluginConfig.resolvers.map(({ key }) => ({ key })),
           },
         },
