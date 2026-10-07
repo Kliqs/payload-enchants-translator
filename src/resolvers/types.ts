@@ -19,6 +19,9 @@ export type TranslateResolverResponse =
     };
 
 export type TranslateResolver = {
+  glossary?: {
+    sync: (req: PayloadRequest, entry?: Record<string, string>) => Promise<void>;
+  };
   key: string;
   resolve: (
     args: TranslateResolverArgs,

@@ -1,11 +1,12 @@
 import type { PayloadHandler } from 'payload';
 import { APIError } from 'payload';
 
+import { translatorT } from '../i18n-translations';
 import { translateOperation } from './operation';
 import type { TranslateEndpointArgs } from './types';
 
 export const translateEndpoint: PayloadHandler = async (req) => {
-  if (!req.json) throw new APIError('Content-Type should be json');
+  if (!req.json) throw new APIError(translatorT(req.t, 'error_jsonRequired'));
 
   const args: TranslateEndpointArgs = await req.json();
 

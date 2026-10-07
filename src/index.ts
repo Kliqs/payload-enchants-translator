@@ -1,13 +1,21 @@
-import type { CollectionSlug, Config, GlobalSlug, Plugin } from 'payload';
+import type { CollectionSlug, Config, GlobalSlug, PayloadRequest, Plugin } from 'payload';
+import { APIError } from 'payload';
 import { deepMerge } from 'payload/shared';
 
 import { CustomButton } from './client/components/CustomButton';
-import { translations } from './i18n-translations';
+import { createGlossaryEntriesCollection } from './glossaryCollection';
+import { translations, translatorT } from './i18n-translations';
 import { translateEndpoint } from './translate/endpoint';
 import { translateOperation } from './translate/operation';
 import type { TranslatorConfig } from './types';
 
+export type { GlossaryConfig } from './glossary';
+
 export { copyResolver } from './resolvers/copy';
+
+export type { DeepLResolverConfig } from './resolvers/deepl';
+
+export { deeplResolver } from './resolvers/deepl';
 
 export { googleResolver } from './resolvers/google';
 
@@ -20,6 +28,63 @@ export { translateOperation };
 
 export const translator: (pluginConfig: TranslatorConfig) => Plugin = (pluginConfig) => {
   return (config) => {
+    config = {
+      ...config,
+      i18n: {
+        ...config.i18n,
+        translations: deepMerge(translations, config.i18n?.translations ?? {}),
+      },
+    };
+    // Keep the opt-in glossary schema available even when translation is disabled.
+    if (pluginConfig.glossary) {
+      const sync = async (req: PayloadRequest, entry?: Record<string, string>) => {
+        const resolver = pluginConfig.resolvers.find((item) => item.key === 'deepl');
+
+        if (!resolver?.glossary)
+          throw new APIError(translatorT(req.t, 'glossary_missingResolver'), 400, undefined, true);
+        await resolver.glossary.sync(req, entry);
+      };
+
+      const entries = createGlossaryEntriesCollection(
+        pluginConfig.glossary,
+        pluginConfig.basePath ?? '',
+        sync,
+      );
+
+      if (config.collections?.some((collection) => collection.slug === entries.slug)) {
+        throw new Error(`A collection with the glossary slug "${entries.slug}" already exists.`);
+      }
+      config = {
+        ...config,
+        collections: [...(config.collections ?? []), entries],
+        endpoints: [
+          ...(config.endpoints ?? []),
+          {
+            handler: async (req: PayloadRequest) => {
+              try {
+                await sync(req);
+
+                return Response.json({ success: true });
+              } catch (error) {
+                req.payload.logger.error(error);
+
+                return Response.json(
+                  {
+                    error:
+                      error instanceof APIError && error.isPublic
+                        ? error.message
+                        : translatorT(req.t, 'glossary_syncError'),
+                  },
+                  { status: 400 },
+                );
+              }
+            },
+            method: 'post',
+            path: '/translator/glossary/sync',
+          },
+        ],
+      };
+    }
     if (pluginConfig.disabled || !config.localization || config.localization.locales.length < 2)
       return config;
 
@@ -89,12 +154,6 @@ export const translator: (pluginConfig: TranslatorConfig) => Plugin = (pluginCon
             },
           };
         }) ?? [],
-      i18n: {
-        ...config.i18n,
-        translations: {
-          ...deepMerge(config.i18n?.translations ?? {}, translations),
-        },
-      },
     };
 
     return updatedConfig;

@@ -59,6 +59,21 @@ export const traverseFields = ({
         break;
 
       case 'group': {
+        if (!('name' in field)) {
+          traverseFields({
+            dataFrom,
+            emptyOnly,
+            fields: field.fields,
+            localizedParent,
+            siblingDataFrom,
+            siblingDataTranslated,
+            translatedData,
+            valuesToTranslate,
+          });
+
+          break;
+        }
+
         const groupDataFrom = siblingDataFrom[field.name] as Record<string, unknown>;
 
         if (!groupDataFrom) break;

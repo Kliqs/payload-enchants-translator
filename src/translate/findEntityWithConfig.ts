@@ -1,3 +1,4 @@
+import { translatorT } from '../i18n-translations';
 import type {
   CollectionSlug,
   GlobalSlug,
@@ -30,7 +31,8 @@ export const findEntityWithConfig = async (
 }> => {
   const { collectionSlug, globalSlug, id, locale, overrideAccess, req } = args;
 
-  if (!collectionSlug && !globalSlug) throw new APIError('Bad Request', 400);
+  if (!collectionSlug && !globalSlug)
+    throw new APIError(translatorT(req.t, 'error_badRequest'), 400);
 
   const { payload } = req;
 
@@ -38,13 +40,13 @@ export const findEntityWithConfig = async (
 
   const isGlobal = !!globalSlug;
 
-  if (!isGlobal && !id) throw new APIError('Bad Request', 400);
+  if (!isGlobal && !id) throw new APIError(translatorT(req.t, 'error_badRequest'), 400);
 
   const entityConfig = isGlobal
     ? findConfigBySlug(globalSlug, config.globals)
     : findConfigBySlug(collectionSlug as string, config.collections);
 
-  if (!entityConfig) throw new APIError('Bad Request', 400);
+  if (!entityConfig) throw new APIError(translatorT(req.t, 'error_badRequest'), 400);
 
   const docPromise = isGlobal
     ? payload.findGlobal({

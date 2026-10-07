@@ -1,8 +1,13 @@
 import type { CollectionSlug, GlobalSlug } from 'payload';
 
+import type { GlossaryConfig } from './glossary';
 import type { TranslateResolver } from './resolvers/types';
 
 export type TranslatorConfig = {
+  /**
+   * Optional base path for the translator API endpoint
+   */
+  basePath?: string;
   /**
    * Collections with the enabled translator in the admin UI
    */
@@ -12,19 +17,16 @@ export type TranslatorConfig = {
    */
   disabled?: boolean;
   /**
-   * Globals with the enabled translator in the admin UI
-   */
-  globals: GlobalSlug[];
-  /**
-   * Add resolvers that you want to include, examples on how to write your own in ./plugin/src/resolvers
-   */
-  resolvers: TranslateResolver[];
-  /**
    * Locales that should be excluded from translation (source and target)
    */
   disabledLocales?: string[];
   /**
-   * Optional base path for the translator API endpoint
+   * Globals with the enabled translator in the admin UI
    */
-  basePath?: string;
+  globals: GlobalSlug[];
+  glossary?: GlossaryConfig;
+  /**
+   * Add resolvers that you want to include, examples on how to write your own in ./plugin/src/resolvers
+   */
+  resolvers: TranslateResolver[];
 };

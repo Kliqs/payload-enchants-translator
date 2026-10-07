@@ -1,6 +1,7 @@
 import he from 'he';
 import { APIError, type Payload, type PayloadRequest } from 'payload';
 
+import { translatorT } from '../i18n-translations';
 import type { TranslateResolver } from '../resolvers/types';
 import { findEntityWithConfig } from './findEntityWithConfig';
 import { traverseFields } from './traverseFields';
@@ -39,7 +40,8 @@ export const translateOperation = async (args: TranslateOperationArgs) => {
     (req.payload.config.custom?.translator?.resolvers as TranslateResolver[]) ?? []
   ).find((each) => each.key === args.resolver);
 
-  if (!resolver) throw new APIError(`Resolver with the key ${args.resolver} was not found`);
+  if (!resolver)
+    throw new APIError(translatorT(req.t, 'error_missingResolver', { resolver: args.resolver }));
 
   const valuesToTranslate: ValueToTranslate[] = [];
 

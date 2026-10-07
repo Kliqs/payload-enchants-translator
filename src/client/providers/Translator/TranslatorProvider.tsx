@@ -15,6 +15,7 @@ import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import type { TranslateResolver } from '../../../resolvers/types';
 import type { TranslateArgs } from '../../../translate/types';
 import { createClient } from '../../api';
+import { translatorT } from '../../../i18n-translations';
 import { TranslatorContext } from './context';
 
 const modalSlug = 'translator-modal';
@@ -75,7 +76,7 @@ export const TranslatorProvider = ({ children }: { children: ReactNode }) => {
   }, [custom, resolver]);
 
   if (!localization)
-    throw new Error('Localization config is not provided and PluginTranslator is used');
+    throw new Error(translatorT(t, 'error_missingLocalization'));
 
   const localesOptions = localization.locales.filter((each) => each.code !== locale.code);
 

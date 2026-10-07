@@ -1,6 +1,6 @@
 {
   "name": "@extravirgin/payload-enchants-translator",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "private": false,
   "bugs": "https://github.com/Kliqs/payload-enchants/issues",
   "repository": "https://github.com/Kliqs/payload-enchants",
@@ -42,6 +42,11 @@
       "import": "./dist/exports/client.js",
       "require": "./dist/exports/client.js",
       "types": "./dist/exports/client.d.ts"
+    },
+    "./resolvers/deepl": {
+      "import": "./dist/resolvers/deepl.js",
+      "require": "./dist/resolvers/deepl.js",
+      "types": "./dist/resolvers/deepl.d.ts"
     }
   },
   "files": [
@@ -67,16 +72,23 @@
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
-    "typescript": "5.7.2"
+    "typescript": "5.7.2",
+    "deepl-node": "^1.27.0"
   },
   "peerDependencies": {
     "@payloadcms/translations": "^3.1.0",
     "@payloadcms/ui": "^3.1.0",
-    "payload": "^3.1.0"
+    "payload": "^3.1.0",
+    "deepl-node": "^1.27.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts"
+  "types": "./dist/index.d.ts",
+  "peerDependenciesMeta": {
+    "deepl-node": {
+      "optional": true
+    }
+  }
 }

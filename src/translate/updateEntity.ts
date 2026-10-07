@@ -1,6 +1,8 @@
 import type { CollectionSlug, GlobalSlug, PayloadRequest, TypeWithID } from 'payload';
 import { APIError } from 'payload';
 
+import { translatorT } from '../i18n-translations';
+
 type Args = {
   collectionSlug?: string;
   data: Record<string, any>;
@@ -22,11 +24,12 @@ export const updateEntity = ({
   overrideAccess,
   req,
 }: Args): Promise<Record<string, unknown> & TypeWithID> => {
-  if (!collectionSlug && !globalSlug) throw new APIError('Bad Request', 400);
+  if (!collectionSlug && !globalSlug)
+    throw new APIError(translatorT(req.t, 'error_badRequest'), 400);
 
   const isGlobal = !!globalSlug;
 
-  if (!isGlobal && !id) throw new APIError('Bad Request', 400);
+  if (!isGlobal && !id) throw new APIError(translatorT(req.t, 'error_badRequest'), 400);
 
   const depth = incomingDepth ?? req.payload.config.defaultDepth;
 
