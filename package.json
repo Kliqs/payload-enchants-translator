@@ -9,44 +9,44 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     },
     "./types": {
+      "types": "./dist/types.d.ts",
       "import": "./dist/types.js",
-      "require": "./dist/types.js",
-      "types": "./dist/types.d.ts"
+      "require": "./dist/types.js"
     },
     "./resolvers/types": {
+      "types": "./dist/resolvers/types.d.ts",
       "import": "./dist/resolvers/types.js",
-      "require": "./dist/resolvers/types.js",
-      "types": "./dist/resolvers/types.d.ts"
+      "require": "./dist/resolvers/types.js"
     },
     "./resolvers/google": {
+      "types": "./dist/resolvers/google.d.ts",
       "import": "./dist/resolvers/google.js",
-      "require": "./dist/resolvers/google.js",
-      "types": "./dist/resolvers/google.d.ts"
+      "require": "./dist/resolvers/google.js"
     },
     "./resolvers/copy": {
+      "types": "./dist/resolvers/copy.d.ts",
       "import": "./dist/resolvers/copy.js",
-      "require": "./dist/resolvers/copy.js",
-      "types": "./dist/resolvers/copy.d.ts"
+      "require": "./dist/resolvers/copy.js"
     },
     "./resolvers/openAI": {
+      "types": "./dist/resolvers/openAI.d.ts",
       "import": "./dist/resolvers/openAI.js",
-      "require": "./dist/resolvers/openAI.js",
-      "types": "./dist/resolvers/openAI.d.ts"
+      "require": "./dist/resolvers/openAI.js"
     },
     "./client": {
+      "types": "./dist/exports/client.d.ts",
       "import": "./dist/exports/client.js",
-      "require": "./dist/exports/client.js",
-      "types": "./dist/exports/client.d.ts"
+      "require": "./dist/exports/client.js"
     },
     "./resolvers/deepl": {
+      "types": "./dist/resolvers/deepl.d.ts",
       "import": "./dist/resolvers/deepl.js",
-      "require": "./dist/resolvers/deepl.js",
-      "types": "./dist/resolvers/deepl.d.ts"
+      "require": "./dist/resolvers/deepl.js"
     }
   },
   "files": [
@@ -60,7 +60,10 @@
     "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png,json}\" dist/",
     "lint": "eslint src",
     "lint:fix": "eslint --fix --ext .ts,.tsx src",
-    "prepublishOnly": "pnpm clean && pnpm build"
+    "prepublishOnly": "pnpm clean && pnpm build",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "test": "vitest run",
+    "dev": "pnpm --dir playground dev"
   },
   "dependencies": {
     "bson-objectid": "^2.0.4",
@@ -70,10 +73,26 @@
     "@types/he": "^1.2.3",
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react": "19.0.0-rc-65a56d0e-20241020",
+    "react-dom": "19.0.0-rc-65a56d0e-20241020",
     "typescript": "5.7.2",
-    "deepl-node": "^1.27.0"
+    "deepl-node": "^1.27.0",
+    "@swc/cli": "^0.7.9",
+    "@swc/core": "^1.6.3",
+    "copyfiles": "^2.4.1",
+    "rimraf": "^5.0.7",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-perfectionist": "^2.11.0",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "@types/node": "^20.14.7",
+    "payload": "3.1.0",
+    "@payloadcms/ui": "3.1.0",
+    "@payloadcms/translations": "3.1.0",
+    "vitest": "3.2.4",
+    "tsx": "4.19.2"
   },
   "peerDependencies": {
     "@payloadcms/translations": "^3.1.0",
@@ -89,6 +108,15 @@
   "peerDependenciesMeta": {
     "deepl-node": {
       "optional": true
+    }
+  },
+  "packageManager": "pnpm@10.11.0",
+  "pnpm": {
+    "overrides": {
+      "react": "19.0.0-rc-65a56d0e-20241020",
+      "react-dom": "19.0.0-rc-65a56d0e-20241020",
+      "@types/react": "npm:types-react@19.0.0-rc.1",
+      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
     }
   }
 }

@@ -1,0 +1,32 @@
+{
+  "name": "translator-playground",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "generate:importmap": "payload generate:importmap",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx smoke.ts"
+  },
+  "dependencies": {
+    "@payloadcms/db-mongodb": "3.1.0",
+    "@payloadcms/next": "3.1.0",
+    "@payloadcms/richtext-lexical": "3.1.0",
+    "@payloadcms/translations": "3.1.0",
+    "@payloadcms/ui": "3.1.0",
+    "next": "15.0.0",
+    "payload": "3.1.0",
+    "react": "19.0.0-rc-65a56d0e-20241020",
+    "react-dom": "19.0.0-rc-65a56d0e-20241020",
+    "@extravirgin/payload-enchants-translator": "file:../artifacts/extravirgin-payload-enchants-translator-1.1.0.tgz"
+  },
+  "devDependencies": {
+    "typescript": "5.7.2",
+    "@types/node": "^20.14.7",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "mongodb-memory-server": "10.1.4",
+    "tsx": "4.19.2"
+  }
+}

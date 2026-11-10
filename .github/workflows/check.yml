@@ -1,0 +1,27 @@
+name: Check standalone package
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm clean && pnpm build
+      - run: pnpm pack --pack-destination artifacts
+      - run: pnpm --dir playground install --frozen-lockfile
+      - run: pnpm --dir playground test
+      - run: pnpm --dir playground generate:importmap
+      - run: pnpm --dir playground typecheck
+      - run: pnpm --dir playground build

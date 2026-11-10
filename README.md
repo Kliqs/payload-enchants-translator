@@ -366,3 +366,60 @@ const field = {
   type: 'text',
 };
 ```
+
+## Standalone development
+
+This repository contains only the translator package extracted from
+[Kliqs/payload-enchants](https://github.com/Kliqs/payload-enchants), originally
+by [r1tsuu](https://github.com/r1tsuu/payload-enchants). The npm name and public
+entry points are unchanged. See [MIGRATION.md](./MIGRATION.md) for provenance
+and the extraction review.
+
+Use Node.js 22 and pnpm 10.11.0 (via Corepack):
+
+```sh
+corepack enable
+pnpm install --frozen-lockfile
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm clean && pnpm build
+pnpm pack --pack-destination artifacts
+pnpm --dir playground install --frozen-lockfile
+pnpm --dir playground test
+pnpm --dir playground generate:importmap
+pnpm --dir playground typecheck
+```
+
+The playground installs the packed tarball, rather than importing source
+through workspace aliases. Rebuild, repack and reinstall it after changing
+the plugin. Its smoke test starts a temporary MongoDB with generated sample
+content and removes the database when finished; first run downloads MongoDB.
+It requires no translation-provider credentials.
+
+For manual admin testing, start a local MongoDB on port 27017 and run
+`pnpm dev`. Open `http://localhost:3000/admin`, create a local test account,
+create an English post, save it, switch to German and try both copy actions.
+Also test the Settings global. The development server binds to localhost.
+The default session secret is generated per process; sessions expire when
+the server restarts. Use configured environment variables for a persistent
+secret or a different MongoDB URL; do not commit credentials.
+
+The playground deliberately enables only the Copy resolver. Live DeepL,
+Google, OpenAI and glossary synchronization require explicit provider setup
+and separate manual checks. Glossary validation is covered by unit tests.
+
+### Releases
+
+CI checks the package but never publishes it. After review, update the
+package version and the playground tarball dependency together, rebuild,
+repack and regenerate both lockfiles. Publish with `pnpm publish` only when
+a release is explicitly approved. The existing version 1.1.0 is retained as
+the extraction baseline; do not overwrite an existing npm release.
+
+### Upstream updates
+
+GitHub's fork sync does not apply to this extracted repository. Inspect
+changes under `packages/translator` in the original monorepo, apply relevant
+changes on a feature branch, and rerun the package and playground checks.
+Root-level dependency and tooling changes must be assessed separately.
