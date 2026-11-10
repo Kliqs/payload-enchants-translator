@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { getPayload } from 'payload';
+import { createLocalReq, getPayload } from 'payload';
 import { translateOperation } from '@extravirgin/payload-enchants-translator';
 
 const database = await MongoMemoryServer.create();
@@ -23,6 +23,50 @@ try {
   await translateOperation({ payload, globalSlug: 'settings', localeFrom: 'en', locale: 'de', resolver: 'copy', update: true });
   const settings = await payload.findGlobal({ slug: 'settings', locale: 'de', fallbackLocale: false });
   assert.equal(settings.title, 'Settings example');
+  const req = await createLocalReq({ locale: 'de' }, payload);
+  const restrictedArgs = { req, collectionSlug: 'posts', id: post.id, localeFrom: 'en', locale: 'de', resolver: 'copy', data: {}, overrideAccess: false };
+  const postsConfig = payload.collections.posts.config;
+  const originalRead = postsConfig.access.read;
+  postsConfig.access.read = () => false;
+  try {
+    await assert.rejects(() => translateOperation(restrictedArgs));
+    await assert.rejects(() => translateOperation({ ...restrictedArgs, data: undefined }));
+    req.json = async () => ({ collectionSlug: 'posts', id: post.id, localeFrom: 'en', locale: 'de', resolver: 'copy', data: {} });
+    const endpoint = payload.config.endpoints.find((item) => item.path === '/translator/translate');
+    assert.ok(endpoint);
+    await assert.rejects(async () => endpoint.handler(req));
+    const privileged = await translateOperation({ ...restrictedArgs, overrideAccess: true });
+    assert.ok(privileged.success);
+    assert.equal(privileged.translatedData.title, 'Example');
+  } finally {
+    postsConfig.access.read = originalRead;
+  }
+  const titleField = postsConfig.fields.find((field) => 'name' in field && field.name === 'title');
+  assert.ok(titleField && 'access' in titleField);
+  const originalFieldAccess = titleField.access;
+  postsConfig.access.read = () => true;
+  const allowed = await translateOperation(restrictedArgs);
+  assert.ok(allowed.success);
+  assert.equal(allowed.translatedData.title, 'Example');
+  titleField.access = { ...originalFieldAccess, read: () => false };
+  try {
+    const restrictedField = await translateOperation({ ...restrictedArgs, data: {} });
+    assert.ok(restrictedField.success);
+    assert.equal(restrictedField.translatedData.title, undefined);
+  } finally {
+    titleField.access = originalFieldAccess;
+    postsConfig.access.read = originalRead;
+  }
+  const settingsConfig = payload.config.globals.find((global) => global.slug === 'settings');
+  assert.ok(settingsConfig);
+  const originalGlobalRead = settingsConfig.access.read;
+  settingsConfig.access.read = () => false;
+  try {
+    await assert.rejects(() => translateOperation({ req, globalSlug: 'settings', localeFrom: 'en', locale: 'de', resolver: 'copy', data: {}, overrideAccess: false }));
+  } finally {
+    settingsConfig.access.read = originalGlobalRead;
+  }
+  console.log('Access controls passed: collection, global, field, endpoint and explicit privileged calls.');
   console.log('Packed plugin: collection, global, empty-only and excluded fields passed.');
 } finally {
   await payload?.db.destroy?.();
