@@ -209,6 +209,8 @@ export const traverseFields = ({
       case 'relationship':
       case 'select':
       case 'upload':
+        if (emptyOnly && !isEmpty(siblingDataTranslated[field.name]) && siblingDataTranslated[field.name] !== '') break;
+
         siblingDataTranslated[field.name] = siblingDataFrom[field.name];
 
         break;

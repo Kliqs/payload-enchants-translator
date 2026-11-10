@@ -22,6 +22,8 @@ export default buildConfig({
       versions: { drafts: true },
       fields: [
         { name: 'title', type: 'text', localized: true },
+        { name: 'count', type: 'number', localized: true },
+        { name: 'enabled', type: 'checkbox', localized: true },
         { name: 'content', type: 'richText', localized: true },
         { name: 'skip', type: 'text', localized: true, custom: { translatorSkip: true } },
       ],
