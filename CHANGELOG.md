@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.2
+
+- Retain the translator button import when the installed plugin is disabled, localization is absent, or only one locale is configured. Translation stays disabled in those states.
+- Regenerating the import map after removing the plugin still removes its component entry.
+
 ## 1.1.1
 
 - Honor `custom.translatorSkip` for every field type, including localized uploads/PDFs and rich text. Excluded containers are not traversed.

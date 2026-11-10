@@ -19,7 +19,7 @@
     "payload": "3.1.0",
     "react": "19.0.0-rc-65a56d0e-20241020",
     "react-dom": "19.0.0-rc-65a56d0e-20241020",
-    "@extravirgin/payload-enchants-translator": "file:../artifacts/extravirgin-payload-enchants-translator-1.1.1.tgz"
+    "@extravirgin/payload-enchants-translator": "file:../artifacts/extravirgin-payload-enchants-translator-1.1.2.tgz"
   },
   "devDependencies": {
     "typescript": "5.7.2",

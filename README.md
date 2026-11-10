@@ -78,6 +78,12 @@ export default buildConfig({
 
 ## Resolvers
 
+Keep `translator()` in the `plugins` array when an API key is unavailable and set
+`disabled: true`. Translation stays disabled, while `payload generate:importmap`
+(or your project's `make generate`) retains the translator button import. This
+also works without localization or with only one locale. Remove `translator()`
+from the config when uninstalling the plugin; regenerating then removes its import.
+
 ### DeepL without a glossary
 
 For translation only, omit `glossary` from both `translator()` and `deeplResolver()`, and omit `glossaryId`. Only `DEEPL_API_KEY` is needed; `DEEPL_GLOSSARY_ID` is not required.
