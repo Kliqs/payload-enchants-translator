@@ -11,7 +11,7 @@
 - 69 relevant commits retained. Extraction rewrites commit IDs; monorepo commits
   that never affected translator are omitted.
 - Local `main` marks that extracted baseline. All migration changes are on
-  `chore/standalone-translator`; nothing has been pushed or published.
+  `chore/standalone-translator` for review through a pull request.
 
 ## What changed
 
@@ -85,7 +85,6 @@ Remaining limits:
   installation. The playground is for local migration checks only; upgrading
   Next/Payload is a separate task before any deployment.
 - Local checks used Node 24.18.0; CI specifies Node 22 and has not run remotely.
-- GitHub authentication is not configured in this workspace. The new remote
-  repository and pull request have not been created. Repository metadata still
-  points to the existing Kliqs monorepo until a new remote exists.
+- Independent remote: https://github.com/Kliqs/payload-enchants-translator.
+  Package repository and issue metadata now point to this remote.
 - No npm package was published and the original repository remains intact.

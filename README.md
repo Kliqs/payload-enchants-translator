@@ -392,8 +392,9 @@ pnpm --dir playground typecheck
 ```
 
 The playground installs the packed tarball, rather than importing source
-through workspace aliases. Rebuild, repack and reinstall it after changing
-the plugin. Its smoke test starts a temporary MongoDB with generated sample
+through workspace aliases. After rebuilding and repacking a changed plugin,
+run `pnpm --dir playground update @extravirgin/payload-enchants-translator`
+to refresh the installed archive and its integrity in the consumer lockfile. Its smoke test starts a temporary MongoDB with generated sample
 content and removes the database when finished; first run downloads MongoDB.
 It requires no translation-provider credentials.
 
