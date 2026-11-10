@@ -326,7 +326,7 @@ packages:
     os: [win32]
 
   '@extravirgin/payload-enchants-translator@file:../artifacts/extravirgin-payload-enchants-translator-1.1.0.tgz':
-    resolution: {integrity: sha512-cYwbx1Ha4oQ1TKzFFDq7d8bE+dRnBvjUJmDOK7sfjj/xnuZxI2J0x+z3II2grBe87Fgwj63TRXv8TCbTq1gW1Q==, tarball: file:../artifacts/extravirgin-payload-enchants-translator-1.1.0.tgz}
+    resolution: {integrity: sha512-d/7rTPlaSt/C/2TM/IfspoHiU0MY8OWwFHcFtjoXlnlFDsPtFk6YBO3Jmu2LdWWGCU7RXoUJ30gCA+BTtBjwQg==, tarball: file:../artifacts/extravirgin-payload-enchants-translator-1.1.0.tgz}
     version: 1.1.0
     peerDependencies:
       '@payloadcms/translations': ^3.1.0
