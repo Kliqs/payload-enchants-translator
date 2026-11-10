@@ -5,12 +5,18 @@ import { translateOperation } from '@extravirgin/payload-enchants-translator';
 
 const database = await MongoMemoryServer.create();
 process.env.MONGODB_URI = database.getUri('translator-smoke');
+const richText = (text: string) => ({ root: {
+  type: 'root', version: 1, format: '' as const, indent: 0, direction: null,
+  children: [{ type: 'paragraph', version: 1, format: '', indent: 0, direction: null, textFormat: 0, textStyle: '',
+    children: [{ type: 'text', version: 1, text, format: 0, detail: 0, mode: 'normal', style: '' }] }],
+} });
 let payload: Awaited<ReturnType<typeof getPayload>> | undefined;
 try {
   const { default: config } = await import('./payload.config');
   payload = await getPayload({ config });
-  const post = await payload.create({ collection: 'posts', locale: 'en', data: { title: 'Example', skip: 'Excluded', count: 42, enabled: true } });
-  await payload.update({ collection: 'posts', id: post.id, locale: 'de', data: { title: 'Existing', skip: 'Keep', count: 0, enabled: false } });
+  const post = await payload.create({ collection: 'posts', locale: 'en', data: { title: 'Example', skip: 'Excluded', count: 42, enabled: true, content: richText('Translate body'), skippedContent: richText('Excluded body') } });
+  await payload.update({ collection: 'posts', id: post.id, locale: 'de', data: { title: 'Existing', skip: 'Keep', count: 0, enabled: false, skippedContent: richText('Keep body') } });
+  const originalDestination = await payload.findByID({ collection: 'posts', id: post.id, locale: 'de', fallbackLocale: false });
   const args = { payload, collectionSlug: 'posts', id: post.id, localeFrom: 'en', locale: 'de', resolver: 'copy', update: true };
   await translateOperation({ ...args, emptyOnly: true });
   let translated = await payload.findByID({ collection: 'posts', id: post.id, locale: 'de', fallbackLocale: false });
@@ -23,6 +29,8 @@ try {
   assert.equal(translated.count, 42);
   assert.equal(translated.enabled, true);
   assert.equal(translated.skip, 'Keep');
+  assert.deepEqual(translated.skippedContent, originalDestination.skippedContent);
+  assert.deepEqual(translated.content, post.content);
   await payload.updateGlobal({ slug: 'settings', locale: 'en', data: { title: 'Settings example' } });
   await translateOperation({ payload, globalSlug: 'settings', localeFrom: 'en', locale: 'de', resolver: 'copy', update: true });
   const settings = await payload.findGlobal({ slug: 'settings', locale: 'de', fallbackLocale: false });

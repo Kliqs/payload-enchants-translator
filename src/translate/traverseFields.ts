@@ -29,6 +29,8 @@ export const traverseFields = ({
   siblingDataTranslated = siblingDataTranslated ?? translatedData;
 
   for (const field of fields) {
+    if (field.custom && typeof field.custom === 'object' && field.custom.translatorSkip) continue;
+
     switch (field.type) {
       case 'tabs':
         for (const tab of field.tabs) {
@@ -217,8 +219,6 @@ export const traverseFields = ({
 
       case 'text':
       case 'textarea':
-        if (field.custom && typeof field.custom === 'object' && field.custom.translatorSkip) break;
-
         if (!(field.localized || localizedParent) || isEmpty(siblingDataFrom[field.name])) break;
         if (emptyOnly && siblingDataTranslated[field.name]) break;
 

@@ -25,6 +25,7 @@ export default buildConfig({
         { name: 'count', type: 'number', localized: true },
         { name: 'enabled', type: 'checkbox', localized: true },
         { name: 'content', type: 'richText', localized: true },
+        { name: 'skippedContent', type: 'richText', localized: true, custom: { translatorSkip: true } },
         { name: 'skip', type: 'text', localized: true, custom: { translatorSkip: true } },
       ],
     },
