@@ -30,6 +30,16 @@ export const translator: (pluginConfig: TranslatorConfig) => Plugin = (pluginCon
   return (config) => {
     config = {
       ...config,
+      admin: {
+        ...config.admin,
+        dependencies: {
+          ...config.admin?.dependencies,
+          '@extravirgin/payload-enchants-translator': {
+            path: '@extravirgin/payload-enchants-translator/client#CustomButtonWithTranslator',
+            type: 'component',
+          },
+        },
+      },
       i18n: {
         ...config.i18n,
         translations: deepMerge(translations, config.i18n?.translations ?? {}),
