@@ -415,8 +415,7 @@ and separate manual checks. Glossary validation is covered by unit tests.
 CI checks the package but never publishes it. After review, update the
 package version and the playground tarball dependency together, rebuild,
 repack and regenerate both lockfiles. Publish with `pnpm publish` only when
-a release is explicitly approved. The existing version 1.1.0 is retained as
-the extraction baseline; do not overwrite an existing npm release.
+a release is explicitly approved. The extraction baseline was version 1.1.0; use a new version for each npm release.
 
 ### Upstream updates
 
