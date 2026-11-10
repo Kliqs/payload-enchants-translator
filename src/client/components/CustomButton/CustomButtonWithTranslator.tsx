@@ -9,7 +9,7 @@ import { TranslatorProvider } from '../../providers/Translator/TranslatorProvide
 import { ResolverButton } from '../ResolverButton';
 import { TranslatorModal } from '../TranslatorModal';
 
-export const CustomButtonWithTranslator = ({ type, disabledLocales }: { type: 'publish' | 'save', disabledLocales: string[] }) => {
+export const CustomButtonWithTranslator = ({ disabledLocales, type }: { disabledLocales: string[], type: 'publish' | 'save' }) => {
   const { config } = useConfig();
   const locale = useLocale();
 
