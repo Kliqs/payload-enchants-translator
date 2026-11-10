@@ -354,7 +354,7 @@ export const copyOtherLocales: CollectionAfterChangeHook = async ({
 
 ### Omitting fields
 
-To omit a specific field for translation, simply add `custom.translatorSkip = true` to the field's config.
+To omit a specific field for translation, add `custom.translatorSkip = true` to the field's config. This applies to every field type, including rich text. On groups, arrays, blocks or layout fields, it excludes the entire subtree. Skipped content is neither copied nor collected for the translation resolver.
 
 ```ts
 const field = {
