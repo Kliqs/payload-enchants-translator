@@ -60,12 +60,12 @@ export const findEntityWithConfig = async (
     : payload.findByID({
         collection: collectionSlug as CollectionSlug,
         depth: 0,
+        draft: true,
         fallbackLocale: undefined,
         id: id as number | string,
         locale: locale as any,
         overrideAccess,
         req,
-        draft: true,
       });
 
   return {

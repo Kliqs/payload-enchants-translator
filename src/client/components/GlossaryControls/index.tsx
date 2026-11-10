@@ -38,7 +38,6 @@ export const GlossaryControls = ({ basePath }: { basePath: string }) => {
   return (
     <Button
       disabled={syncing}
-      margin={false}
       onClick={sync}
       size='small'
       tooltip={translatorT(t, 'glossary_syncHint')}
